@@ -3,17 +3,17 @@
 ###*Backend*
 
 *Principles*
-: Clean architechture
-: Domain Driven Design
-: CQRS
-: Repository
-: Unit of work
+- Clean architechture
+- Domain Driven Design
+- CQRS
+- Repository
+- Unit of work
 
 *Stack and libraries*
-: .NET REST Minimal API
-: Entity Framework Core with SQL Server
-: MediatR
-: FluentValidation
-: Serilog
-: Mapster
-: Swagger
+- .NET REST Minimal API
+- Entity Framework Core with SQL Server
+- MediatR
+- FluentValidation
+- Serilog
+- Mapster
+- Swagger
