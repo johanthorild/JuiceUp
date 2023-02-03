@@ -2,6 +2,7 @@
 
 using Application.Providers;
 
+using Domain;
 using Domain.Repositories;
 
 using Infrastructure.Options;
@@ -38,6 +39,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("MainDb")));
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
@@ -51,6 +53,9 @@ public static class DependencyInjection
         var addressOptions = ConfigureOptions<AddressOptions>(services, configuration, AddressOptions.OptionsKey);
 
         services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
+        services.AddTransient<IHttpContextUserProvider, HttpContextUserProvider>();
+
+        services.AddHttpContextAccessor();
 
         services.AddAuthentication(x =>
         {

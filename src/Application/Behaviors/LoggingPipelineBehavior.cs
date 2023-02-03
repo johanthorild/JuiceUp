@@ -6,7 +6,7 @@ namespace Application.Behaviors;
 public class LoggingPipelineBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    where TResponse : ErrorOr
+    // where TResponse : Result
 {
     private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
 
@@ -27,14 +27,14 @@ public class LoggingPipelineBehavior<TRequest, TResponse>
 
         var result = await next();
 
-        if (result.IsFailure)
-        {
-            _logger.LogError(
-            "Failed request: {@RequestName}, {@Error} {@DateTimeUtc}",
-            typeof(TRequest).Name,
-            result.Error,
-            DateTime.UtcNow); ;
-        }
+        //if (result.IsFailure)
+        //{
+        //    _logger.LogError(
+        //    "Failed request: {@RequestName}, {@Error} {@DateTimeUtc}",
+        //    typeof(TRequest).Name,
+        //    result.Error,
+        //    DateTime.UtcNow); ;
+        //}
 
         _logger.LogInformation(
             "Completed request: {@RequestName}, {@DateTimeUtc}",
