@@ -1,5 +1,6 @@
-﻿using Infrastructure.Models;
+﻿using Application.Providers;
 
+using Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -7,13 +8,17 @@ namespace Infrastructure;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public AppDbContext(IDateTimeProvider dateTimeProvider)
     {
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IDateTimeProvider dateTimeProvider)
         : base(options)
     {
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public virtual DbSet<CarModel> CarModels { get; set; } = null!;
@@ -142,8 +147,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.RoleId, "IX_UserRoles_RoleId");
 
-            entity.Property(e => e.LastChangedBy).HasMaxLength(255);
-
             entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
@@ -153,9 +156,36 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
+        SeedDefaultData(modelBuilder);
+
         RestrictCascadingDeletesOnAllForeignKeys(modelBuilder);
 
         OnModelCreatingPartial(modelBuilder);
+    }
+
+    private void SeedDefaultData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Reader", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new Role { Id = 2, Name = "Admin", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
+
+        modelBuilder.Entity<ChargerSpeed>().HasData(
+            new ChargerSpeed { Id = 1, Kilowatt = 11 },
+            new ChargerSpeed { Id = 2, Kilowatt = 22 },
+            new ChargerSpeed { Id = 3, Kilowatt = 50 });
+
+        modelBuilder.Entity<Station>().HasData(
+            new Station { Id = 1, Name = "Stockholm", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new Station { Id = 2, Name = "Linköping", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new Station { Id = 3, Name = "Jönköping", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new Station { Id = 4, Name = "Ljungby", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new Station { Id = 5, Name = "Halmstad", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
+
+        modelBuilder.Entity<CarModel>().HasData(
+            new CarModel { Id = 1, Name = "Tesla Model 3", Capacity = 57.5, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new CarModel { Id = 2, Name = "Kia EV6", Capacity = 54, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new CarModel { Id = 3, Name = "MG 4", Capacity = 51, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
+            new CarModel { Id = 4, Name = "Opel Corsa-e", Capacity = 45, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
     }
 
     private static void RestrictCascadingDeletesOnAllForeignKeys(ModelBuilder modelBuilder)

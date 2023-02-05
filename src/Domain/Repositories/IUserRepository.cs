@@ -8,6 +8,6 @@ public interface IUserRepository
     Task<User?> GetByEmail(string email);
     void Insert(User user);
     void Update(User user);
-    void Delete(User user);
+    void Delete(Guid id);
 }
 

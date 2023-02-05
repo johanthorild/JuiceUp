@@ -1,8 +1,8 @@
-﻿using Infrastructure.Models.Abstractions;
+﻿using Domain.Entities.Abstractions;
 
-namespace Infrastructure.Models;
+namespace Domain.Entities;
 
-public partial class Station : DbEntity, IChangeTracked
+public partial class Station : IEntity, IChangeTracked
 {
     public int Id { get; set; }
 
@@ -20,7 +20,7 @@ public partial class Station : DbEntity, IChangeTracked
 
     public DateTime LastChanged { get; set; }
 
-    public string LastChangedBy { get; set; } = null!;
+    public string? LastChangedBy { get; set; }
 
     /// <summary>
     /// Navigational properties />

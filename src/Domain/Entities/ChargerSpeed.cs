@@ -1,8 +1,8 @@
-﻿using Infrastructure.Models.Abstractions;
+﻿using Domain.Entities.Abstractions;
 
-namespace Infrastructure.Models;
+namespace Domain.Entities;
 
-public partial class ChargerSpeed : DbEntity
+public partial class ChargerSpeed : IEntity
 {
     public int Id { get; set; }
 

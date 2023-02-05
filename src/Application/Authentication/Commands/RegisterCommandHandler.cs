@@ -31,17 +31,17 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
     {
         await Task.CompletedTask; // remove when handler uses async methods
 
-        if (_userRepository.GetByEmail(command.Email) is not null)
+        var existing = await _userRepository.GetByEmail(command.Email);
+        if (existing is not null)
             throw new NotImplementedException(nameof(RegisterCommand));
 
         var (salt, hashedPassword) = PasswordHelper.GenerateHashedPasswordWithSalt(command.PasswordBase64);
-        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt);
 
-        // TODO: Add initial role for a newly registred user (not admin)
+        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt);
 
         _userRepository.Insert(user);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesWithoutChangeTrackingAsync(cancellationToken);
 
         var token = _jwtTokenProvider.GenerateToken(user);
 

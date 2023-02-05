@@ -1,8 +1,8 @@
-﻿using Infrastructure.Models.Abstractions;
+﻿using Domain.Entities.Abstractions;
 
-namespace Infrastructure.Models;
+namespace Domain.Entities;
 
-public partial class Reservation : DbEntity
+public partial class Reservation : IEntity
 {
     public int ChargerId { get; set; }
 

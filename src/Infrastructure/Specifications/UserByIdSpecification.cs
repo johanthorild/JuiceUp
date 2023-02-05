@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models;
+﻿using Domain.Entities;
+
 using Infrastructure.Specifications.NewFolder;
 
 namespace Infrastructure.Specifications;

@@ -49,14 +49,13 @@ public class JwtTokenProvider : IJwtTokenProvider
         var shouldAddAudienceClaim =
             string.IsNullOrWhiteSpace(claims?.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
 
-
         var securityToken = new JwtSecurityToken(
             issuer: _addressesSettings.SiteUrl,
             audience: shouldAddAudienceClaim ? _addressesSettings.SiteUrl : null,
-            signingCredentials: credentials,
             claims: claims,
             notBefore: _dateTimeProvider.UtcNow,
-            expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationTimeInMinutes));
+            expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationTimeInMinutes),
+            signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }

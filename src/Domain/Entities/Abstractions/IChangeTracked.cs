@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Models.Abstractions;
+﻿namespace Domain.Entities.Abstractions;
 
 /// <summary>
 /// Contains change tracking information.
@@ -13,6 +13,6 @@ public interface IChangeTracked
     /// <summary>
     /// Username of user that performed the last change.
     /// </summary>
-    string LastChangedBy { get; set; }
+    string? LastChangedBy { get; set; }
 
 }

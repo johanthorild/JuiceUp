@@ -1,8 +1,8 @@
-﻿using Infrastructure.Models.Abstractions;
+﻿using Domain.Entities.Abstractions;
 
 namespace Infrastructure.Specifications.Abstractions;
-public class SpecificationEvaluator<TEntity>
-    where TEntity : DbEntity
+public static class SpecificationEvaluator<TEntity>
+    where TEntity : IEntity
 {
     public static IQueryable<TEntity> GetQuery(
         IQueryable<TEntity> inputQuery,
