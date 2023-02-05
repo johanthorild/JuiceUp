@@ -7,9 +7,9 @@ using Domain.Repositories;
 
 using MediatR;
 
-namespace Application.Authentication.Commands;
+namespace Application.Commands;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginResult>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtTokenProvider _jwtTokenProvider;
@@ -25,12 +25,10 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         _userRepository = userRepository;
     }
 
-    public async Task<AuthenticationResult> Handle(
+    public async Task<LoginResult> Handle(
         RegisterCommand command,
         CancellationToken cancellationToken)
     {
-        await Task.CompletedTask; // remove when handler uses async methods
-
         var existing = await _userRepository.GetByEmail(command.Email);
         if (existing is not null)
             throw new NotImplementedException(nameof(RegisterCommand));
@@ -45,7 +43,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
 
         var token = _jwtTokenProvider.GenerateToken(user);
 
-        return new AuthenticationResult(
+        return new LoginResult(
             user.Id,
             user.Email,
             token

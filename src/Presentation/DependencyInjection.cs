@@ -26,7 +26,8 @@ public static class DependencyInjection
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,

@@ -18,7 +18,9 @@ public sealed class UserRepository : IUserRepository
     {
         var user = await _dbContext.Users
             .Include(u => u.UserRoles)
+                .ThenInclude(u => u.Role)
             .Include(u => u.UserCars)
+                .ThenInclude(u => u.Car)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return user is not null ? user : null;
@@ -28,7 +30,9 @@ public sealed class UserRepository : IUserRepository
     {
         var user = await _dbContext.Users
             .Include(u => u.UserRoles)
+                .ThenInclude(u => u.Role)
             .Include(u => u.UserCars)
+                .ThenInclude(u => u.Car)
             .FirstOrDefaultAsync(x => x.Email == email);
 
         return user is not null ? user : null;

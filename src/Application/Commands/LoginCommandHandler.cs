@@ -1,34 +1,36 @@
 ﻿using Application.Helpers;
 using Application.Providers;
 
+using Domain;
 using Domain.Repositories;
 
 using MediatR;
 
-namespace Application.Authentication.Commands;
+namespace Application.Commands;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationResult>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtTokenProvider _jwtTokenProvider;
-    private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUserRepository _userRepository;
 
     public LoginCommandHandler(
         IJwtTokenProvider jwtTokenProvider,
+        IDateTimeProvider dateTimeProvider,
         IUserRepository userRepository,
-        IDateTimeProvider dateTimeProvider)
+        IUnitOfWork unitOfWork)
     {
         _jwtTokenProvider = jwtTokenProvider;
-        _userRepository = userRepository;
         _dateTimeProvider = dateTimeProvider;
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<AuthenticationResult> Handle(
+    public async Task<LoginResult> Handle(
         LoginCommand command,
         CancellationToken cancellationToken)
     {
-        await Task.CompletedTask; // remove when handler uses async methods
-
         var existing = await _userRepository.GetByEmail(command.Email);
         if (existing is null)
             throw new NotImplementedException(nameof(LoginCommand));
@@ -38,14 +40,16 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationR
 
         if (!PasswordHelper.VerifyPassword(command.PasswordBase64, existing.Password, existing.Salt))
         {
-            // TODO: Lock user if too many failed attempts
-
+            // TODO: Add failed attempt and lock user if too many failed attempts
             throw new NotImplementedException(nameof(LoginCommand));
         }
 
+        existing.ResetFailedLogins();
+        await _unitOfWork.SaveChangesWithoutChangeTrackingAsync(cancellationToken);
+
         var token = _jwtTokenProvider.GenerateToken(existing);
 
-        return new AuthenticationResult(
+        return new LoginResult(
             existing.Id,
             existing.Email,
             token

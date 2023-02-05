@@ -27,4 +27,17 @@ public class HttpContextUserProvider : IHttpContextUserProvider
             return _user.Identity!.Name!;
         }
     }
+
+    public bool IsAdmin
+    {
+        get
+        {
+            if (_user is null)
+            {
+                throw new InvalidOperationException("Cannot get username when no user is logged in. This indicates a bug in the backend.");
+            }
+
+            return _user.Claims.Any(x => x.Type == ClaimTypes.Role && x.Value == "Admin");
+        }
+    }
 }

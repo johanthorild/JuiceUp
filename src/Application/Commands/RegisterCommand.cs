@@ -1,9 +1,9 @@
 ﻿using MediatR;
 
-namespace Application.Authentication.Commands;
+namespace Application.Commands;
 
 public sealed record RegisterCommand(
     string Email,
     string Firstname,
     string Lastname,
-    string PasswordBase64) : IRequest<AuthenticationResult>;
+    string PasswordBase64) : IRequest<LoginResult>;

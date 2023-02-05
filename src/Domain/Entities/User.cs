@@ -40,6 +40,11 @@ public partial class User : IEntity, IChangeTracked
     {
     }
 
+    public User(Guid id)
+    {
+        Id = id;
+    }
+
     public User(
         string email,
         string firstname,
@@ -56,27 +61,22 @@ public partial class User : IEntity, IChangeTracked
         UserRoles = ApplyDefaultRole();
     }
 
-    public void UpdateNames(
-        string firstname,
-        string lastname)
-    {
-        Firstname = firstname;
-        Lastname = lastname;
-    }
+    public void UpdateFirstname(string firstname) => Firstname = firstname;
 
-    public void UpdateEmail(
-    string email)
-    {
-        Email = email;
-    }
+    public void UpdateLastname(string lastname) => Lastname = lastname;
+
+    public void UpdateEmail(string email) => Email = email;
 
     public void UpdatePassword(
-    string password,
-    string salt)
+        string password,
+        string salt)
     {
+
         Password = password;
         Salt = salt;
     }
+
+    public void ResetFailedLogins() => FailedLogins = 0;
 
     static ICollection<UserRole> ApplyDefaultRole()
     {

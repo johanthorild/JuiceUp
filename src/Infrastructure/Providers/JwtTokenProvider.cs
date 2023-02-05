@@ -41,9 +41,12 @@ public class JwtTokenProvider : IJwtTokenProvider
         {
             new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Name, user.Email),
+            new Claim(ClaimTypes.Name, user.Email), // To fill Name prop in HttpContext.User.Identity
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        //claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, x)));
+
+        // Add roles if any
+        claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, x.Role.Name)));
 
         // Add audience if not already existing in the provided claims
         var shouldAddAudienceClaim =

@@ -57,6 +57,8 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
+        services.AddAuthorization();
+
         services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

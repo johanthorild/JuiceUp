@@ -1,4 +1,4 @@
-﻿using Application.Authentication.Commands;
+﻿using Application.Commands;
 
 using Carter;
 

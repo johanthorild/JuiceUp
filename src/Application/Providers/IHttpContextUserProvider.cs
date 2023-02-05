@@ -3,4 +3,5 @@ public interface IHttpContextUserProvider
 {
     // Unique username
     string Email { get; }
+    public bool IsAdmin { get; }
 }
