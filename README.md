@@ -6,7 +6,7 @@
 
 ---
 
-##*Backend*
+## *Backend*
 
 *Principles*
 - Clean architechture
@@ -23,7 +23,7 @@
 - Swagger
 - FluentValidation?
 
-##*Frontend*
+## *Frontend*
 
 *Stack and libraries*
 - React?
