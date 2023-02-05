@@ -67,7 +67,7 @@ public static class DependencyInjection
                 jwtOptions.Secret,
                 addressOptions.SiteUrl));
 
-        // Add (post configuration) token validation paramters to the refresh token checks (not the same instance of options as above)
+        // Add (post configuration) token validation parameters to the refresh token checks (not the same instance of options as above)
         services.PostConfigure<JwtOptions>(options =>
         {
             options.TokenValidationParameters = CreateTokenValidationParameters(

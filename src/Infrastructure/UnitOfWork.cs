@@ -1,8 +1,7 @@
 ﻿using Application.Providers;
 
 using Domain;
-
-using Infrastructure.Models.Abstractions;
+using Domain.Entities.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
 

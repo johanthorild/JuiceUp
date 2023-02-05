@@ -1,8 +1,8 @@
-﻿using Infrastructure.Models.Abstractions;
+﻿using Domain.Entities.Abstractions;
 
-namespace Infrastructure.Models;
+namespace Domain.Entities;
 
-public partial class UserCar : DbEntity
+public partial class UserCar : IEntity
 {
     public int CarId { get; set; }
 

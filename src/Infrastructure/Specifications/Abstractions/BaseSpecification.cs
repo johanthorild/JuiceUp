@@ -11,7 +11,6 @@ public abstract class BaseSpecification<TEntity> : ISpecification<TEntity>
     }
     protected BaseSpecification()
     {
-
     }
 
     public Expression<Func<TEntity, bool>>? Criteria { get; }

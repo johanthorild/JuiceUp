@@ -1,9 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 
-using Infrastructure.Specifications;
-using Infrastructure.Specifications.Abstractions;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -19,80 +16,45 @@ public sealed class UserRepository : IUserRepository
 
     public async Task<User?> GetById(Guid id)
     {
-        var user = await ApplySpecification(new UserByIdSpecification(id))
-            .FirstOrDefaultAsync();
+        var user = await _dbContext.Users
+            .Include(u => u.UserRoles)
+            .Include(u => u.UserCars)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-        return user is not null ? new User()
-        {
-            Id = user.Id,
-            Email = user.Email,
-            Firstname = user.Firstname,
-            Lastname = user.Lastname,
-            LastChanged = user.LastChanged,
-            LastChangedBy = user.LastChangedBy
-        }
-        :
-        null;
+        return user is not null ? user : null;
     }
 
     public async Task<User?> GetByEmail(string email)
     {
         var user = await _dbContext.Users
-            .SingleOrDefaultAsync(x => x.Email == email);
+            .Include(u => u.UserRoles)
+            .Include(u => u.UserCars)
+            .FirstOrDefaultAsync(x => x.Email == email);
 
-        return user is not null ? new User()
-        {
-            Id = user.Id,
-            Email = user.Email,
-            Firstname = user.Firstname,
-            Lastname = user.Lastname,
-            LastChanged = user.LastChanged,
-            LastChangedBy = user.LastChangedBy
-        }
-        :
-        null;
+        return user is not null ? user : null;
     }
 
     public void Insert(User user)
     {
-        var userInsert = new Models.User()
-        {
-            Id = user.Id,
-            Email = user.Email,
-            Firstname = user.Firstname,
-            Lastname = user.Lastname,
-            Password = user.Password,
-            Salt = user.Salt
-        };
-
-        _dbContext?.Set<Models.User>().Add(userInsert);
+        _dbContext?.Set<User>().Add(user);
     }
 
     public void Update(User user)
     {
-        var userUpdate = new Models.User()
-        {
-            Id = user.Id,
-            Email = user.Email,
-            Firstname = user.Firstname,
-            Lastname = user.Lastname,
-            Password = user.Password,
-            Salt = user.Salt
-        };
-
-        _dbContext?.Set<Models.User>().Update(userUpdate);
+        _dbContext?.Set<User>().Update(user);
     }
 
-    public async void Delete(User user)
+    public async void Delete(Guid id)
     {
-        _dbContext?.Set<Models.User>().Remove(
+        _dbContext?.Set<User>().Remove(
             await _dbContext.Users
-            .SingleAsync(x => x.Id == user.Id)
+            .SingleAsync(x => x.Id == id)
             );
     }
 
-    private IQueryable<Models.User> ApplySpecification(ISpecification<Models.User> specification)
-    {
-        return SpecificationEvaluator<Models.User>.GetQuery(_dbContext.Set<Models.User>(), specification);
-    }
+    // TODO: Apply Specification pattern
+    //private IQueryable<User> ApplySpecification(ISpecification<User> specification)
+    //{
+    //    return SpecificationEvaluator<User>.GetQuery(_dbContext.Set<User>(), specification);
+    //}
 }

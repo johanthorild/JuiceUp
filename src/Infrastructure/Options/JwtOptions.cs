@@ -26,5 +26,4 @@ public class JwtOptions
 
     [JsonIgnore]
     public TokenValidationParameters? TokenValidationParameters { get; set; }
-
 }
