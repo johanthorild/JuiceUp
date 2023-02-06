@@ -1,6 +1,5 @@
 ﻿using Application.Commands;
 
-using Domain;
 using Domain.Entities;
 using Domain.Repositories;
 
@@ -9,14 +8,11 @@ using MediatR;
 namespace Application.Queries;
 public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
 
     public GetUserByIdQueryHandler(
-        IUnitOfWork unitOfWork,
         IUserRepository userRepository)
     {
-        _unitOfWork = unitOfWork;
         _userRepository = userRepository;
     }
 
