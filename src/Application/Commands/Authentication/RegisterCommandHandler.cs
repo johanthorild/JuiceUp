@@ -29,8 +29,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginResu
         RegisterCommand command,
         CancellationToken cancellationToken)
     {
-        var existing = await _userRepository.GetByEmail(command.Email);
-        if (existing is not null)
+        if (await _userRepository.IsUserWithEmailExisting(command.Email))
             throw new NotImplementedException(nameof(RegisterCommand));
 
         var (salt, hashedPassword) = PasswordHelper.GenerateHashedPasswordWithSalt(command.PasswordBase64);

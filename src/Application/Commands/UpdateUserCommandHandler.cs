@@ -2,14 +2,13 @@
 using Application.Providers;
 
 using Domain;
-using Domain.Entities;
 using Domain.Repositories;
 
 using MediatR;
 
 namespace Application.Commands;
 
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpContextUserProvider _httpContextUserProvider;
@@ -25,12 +24,12 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
         _userRepository = userRepository;
     }
 
-    public async Task<User> Handle(
+    public async Task<Guid> Handle(
         UpdateUserCommand command,
         CancellationToken cancellationToken)
     {
         // Only admins and the user itself can update the user
-        if (command.Email != _httpContextUserProvider.Email && !_httpContextUserProvider.IsAdmin)
+        if (command.Id != _httpContextUserProvider.Id && !_httpContextUserProvider.IsAdmin)
             throw new NotImplementedException(nameof(UpdateUserCommand));
 
         // Get existing user
@@ -41,18 +40,15 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
         // Update Email (username)
         if (existing.Email != command.Email)
         {
-            var existingEmail = await _userRepository.GetByEmail(command.Email);
-            if (existingEmail != null)
+            if (await _userRepository.IsUserWithEmailExisting(command.Email))
                 throw new NotImplementedException(nameof(UpdateUserCommand));
 
             existing.UpdateEmail(command.Email);
         }
 
         // Update Names
-        if (existing.Firstname != command.Firstname)
-            existing.UpdateFirstname(command.Firstname);
-        if (existing.Lastname != command.Lastname)
-            existing.UpdateLastname(command.Lastname);
+        existing.UpdateFirstname(command.Firstname);
+        existing.UpdateLastname(command.Lastname);
 
         // Update Password
         if (!string.IsNullOrEmpty(command.PasswordBase64) &&
@@ -66,7 +62,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new User(existing.Id);
+        return existing.Id;
     }
 }
 

@@ -36,15 +36,6 @@ public partial class User : IEntity, IChangeTracked
 
     public virtual ICollection<UserRole> UserRoles { get; } = new List<UserRole>();
 
-    public User()
-    {
-    }
-
-    public User(Guid id)
-    {
-        Id = id;
-    }
-
     public User(
         string email,
         string firstname,
@@ -61,19 +52,33 @@ public partial class User : IEntity, IChangeTracked
         UserRoles = ApplyDefaultRole();
     }
 
-    public void UpdateFirstname(string firstname) => Firstname = firstname;
+    public void UpdateFirstname(string firstname)
+    {
+        if (!string.IsNullOrWhiteSpace(firstname) && firstname != Firstname)
+            Firstname = firstname;
+    }
 
-    public void UpdateLastname(string lastname) => Lastname = lastname;
+    public void UpdateLastname(string lastname)
+    {
+        if (!string.IsNullOrWhiteSpace(lastname) && lastname != Lastname)
+            Lastname = lastname;
+    }
 
-    public void UpdateEmail(string email) => Email = email;
+    public void UpdateEmail(string email)
+    {
+        if (!string.IsNullOrWhiteSpace(email) && email != Email)
+            Email = email;
+    }
 
     public void UpdatePassword(
         string password,
         string salt)
     {
-
-        Password = password;
-        Salt = salt;
+        if (!string.IsNullOrWhiteSpace(password) && password != Password)
+        {
+            Password = password;
+            Salt = salt;
+        }
     }
 
     public void ResetFailedLogins() => FailedLogins = 0;

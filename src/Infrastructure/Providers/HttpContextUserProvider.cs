@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 using Application.Providers;
 
@@ -13,6 +14,19 @@ public class HttpContextUserProvider : IHttpContextUserProvider
     public HttpContextUserProvider(IHttpContextAccessor httpContext)
     {
         _user = httpContext.HttpContext?.User;
+    }
+
+    public Guid Id
+    {
+        get
+        {
+            if (_user is null)
+            {
+                throw new InvalidOperationException("Cannot get username when no user is logged in. This indicates a bug in the backend.");
+            }
+
+            return Guid.Parse(_user.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sid).FirstOrDefault()?.Value ?? string.Empty);
+        }
     }
 
     public string Email

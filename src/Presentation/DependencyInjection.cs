@@ -3,17 +3,33 @@ using System.Text.Json.Serialization;
 
 using Carter;
 
+using Mapster;
+
+using MapsterMapper;
+
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 using Presentation.Requests;
+using Presentation.Responses;
 
 namespace Presentation;
 
 public static class DependencyInjection
 {
+    public static IServiceCollection AddMappings(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -46,8 +62,10 @@ public static class DependencyInjection
             //Set the comments path for the Swagger JSON and UI.
             var apiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiXmlFile), includeControllerXmlComments: true);
-            var modelXmlFile = $"{Assembly.GetAssembly(typeof(RegisterRequest))!.GetName().Name}.xml";
-            config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, modelXmlFile));
+            var requestsXmlFile = $"{Assembly.GetAssembly(typeof(RegisterRequest))!.GetName().Name}.xml";
+            config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, requestsXmlFile));
+            var reponsesXmlFile = $"{Assembly.GetAssembly(typeof(LoginResponse))!.GetName().Name}.xml";
+            config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, reponsesXmlFile));
 
             config.TagActionsBy(api =>
             {
@@ -71,6 +89,8 @@ public static class DependencyInjection
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters
                 .Add(new JsonStringEnumConverter())); // Use enums as string values in models
+
+        services.AddMappings();
 
         services.AddCarter();
 

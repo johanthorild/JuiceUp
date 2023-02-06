@@ -1,7 +1,7 @@
 ﻿namespace Application.Providers;
 public interface IHttpContextUserProvider
 {
-    // Unique username
+    Guid Id { get; }
     string Email { get; }
     public bool IsAdmin { get; }
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Commands;
 
@@ -9,4 +7,4 @@ public sealed record UpdateUserCommand(
     string Email,
     string Firstname,
     string Lastname,
-    string PasswordBase64) : IRequest<User>;
+    string PasswordBase64) : IRequest<Guid>;

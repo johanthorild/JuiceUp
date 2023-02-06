@@ -38,6 +38,11 @@ public sealed class UserRepository : IUserRepository
         return user is not null ? user : null;
     }
 
+    public async Task<bool> IsUserWithEmailExisting(string email)
+    {
+        return await _dbContext.Users.AnyAsync(x => x.Email == email);
+    }
+
     public void Insert(User user)
     {
         _dbContext?.Set<User>().Add(user);
