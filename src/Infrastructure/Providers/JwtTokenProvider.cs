@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 
+using Application.Dtos;
 using Application.Providers;
 
 using Domain.Entities;
@@ -18,18 +19,21 @@ public class JwtTokenProvider : IJwtTokenProvider
     private readonly JwtOptions _jwtSettings;
     private readonly AddressOptions _addressesSettings;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IRefreshTokenStorageProvider _refreshTokenStorageProvider;
 
     public JwtTokenProvider(
         IOptions<JwtOptions> jwtOptions,
         IOptions<AddressOptions> addressesOptions,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IRefreshTokenStorageProvider refreshTokenStorageProvider)
     {
         _jwtSettings = jwtOptions.Value;
         _addressesSettings = addressesOptions.Value;
         _dateTimeProvider = dateTimeProvider;
+        _refreshTokenStorageProvider = refreshTokenStorageProvider;
     }
 
-    public string GenerateToken(User user)
+    public async Task<LoginResult> GenerateToken(User user)
     {
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(
@@ -46,7 +50,8 @@ public class JwtTokenProvider : IJwtTokenProvider
         };
 
         // Add roles if any
-        claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, x.Role.Name)));
+        if (user.UserRoles.Any())
+            claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, x.Role.Name)));
 
         // Add audience if not already existing in the provided claims
         var shouldAddAudienceClaim =
@@ -60,6 +65,11 @@ public class JwtTokenProvider : IJwtTokenProvider
             expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationTimeInMinutes),
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
+        var refreshToken = new RefreshTokenResult(_dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpirationTimeInMinutes), user.Email);
+        await _refreshTokenStorageProvider.AddTokenForUserAsync(refreshToken);
+
+        return await Task.FromResult(new LoginResult(user.Id, user.Email, token, refreshToken));
     }
 }

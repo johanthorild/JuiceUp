@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Dtos;
+using Application.Helpers;
 using Application.Providers;
 
 using Domain;
@@ -34,19 +35,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginResu
 
         var (salt, hashedPassword) = PasswordHelper.GenerateHashedPasswordWithSalt(command.PasswordBase64);
 
-        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt);
+        //TODO: Get Roles from memory cache and apply default for a new user
+
+        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt, new List<UserRole>() { new UserRole() { } });
 
         _userRepository.Insert(user);
 
         await _unitOfWork.SaveChangesWithoutChangeTrackingAsync(cancellationToken);
 
-        var token = _jwtTokenProvider.GenerateToken(user);
-
-        return new LoginResult(
-            user.Id,
-            user.Email,
-            token
-        );
+        return await _jwtTokenProvider.GenerateToken(user);
     }
 }
 

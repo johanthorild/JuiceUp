@@ -1,9 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Dtos;
+
+using Domain.Entities;
 
 namespace Application.Providers;
 
 public interface IJwtTokenProvider
 {
-    string GenerateToken(User user);
+    Task<LoginResult> GenerateToken(User user);
 }
 

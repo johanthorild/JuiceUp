@@ -7,8 +7,8 @@ public interface IUserRepository
     Task<User?> GetById(Guid id);
     Task<User?> GetByEmail(string email);
     Task<bool> IsUserWithEmailExisting(string email);
-    void Insert(User user);
-    void Update(User user);
+    User? Insert(User user);
+    User? Update(User user);
     void Delete(Guid id);
 }
 

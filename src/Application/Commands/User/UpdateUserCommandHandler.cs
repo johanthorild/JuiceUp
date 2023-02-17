@@ -37,25 +37,24 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Guid>
         if (existing is null)
             throw new NotImplementedException(nameof(UpdateUserCommand));
 
-        // Update Email (username)
+        // Validate and set Email (username)
         if (existing.Email != command.Email)
         {
             if (await _userRepository.IsUserWithEmailExisting(command.Email))
                 throw new NotImplementedException(nameof(UpdateUserCommand));
 
-            existing.UpdateEmail(command.Email);
+            existing.SetEmail(command.Email);
         }
 
-        // Update Names
-        existing.UpdateFirstname(command.Firstname);
-        existing.UpdateLastname(command.Lastname);
+        // Set properties
+        existing.SetFirstname(command.Firstname);
+        existing.SetLastname(command.Lastname);
 
-        // Update Password
         if (!string.IsNullOrEmpty(command.PasswordBase64) &&
             !PasswordHelper.VerifyPassword(command.PasswordBase64, existing.Password, existing.Salt))
         {
             var (salt, hashedPassword) = PasswordHelper.GenerateHashedPasswordWithSalt(command.PasswordBase64);
-            existing.UpdatePassword(hashedPassword, salt);
+            existing.SetPassword(hashedPassword, salt);
         }
 
         _userRepository.Update(existing);

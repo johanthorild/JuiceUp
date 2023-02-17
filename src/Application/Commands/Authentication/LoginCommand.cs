@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Application.Dtos;
+
+using MediatR;
 
 namespace Application.Commands;
 

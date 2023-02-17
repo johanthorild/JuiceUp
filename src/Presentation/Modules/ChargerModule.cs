@@ -16,41 +16,40 @@ using Presentation.Requests;
 using Presentation.Responses;
 
 namespace Presentation.Modules;
-public class UserModule : CarterModule
+public class ChargerModule : CarterModule
 {
-    public UserModule()
-        : base("/api/user")
+    public ChargerModule()
+        : base("/api/charger")
     {
-        WithGroupName("User");
+        WithGroupName("Charger");
         RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/{id}", async (
-            [FromRoute] Guid id,
+        app.MapGet("/", async (
             ISender sender,
             IMapper mapper) =>
         {
-            var result = await sender.Send(new GetUserByIdQuery(id));
-            return Results.Ok(mapper.Map<UserResponse>(result));
-        });
+            var result = await sender.Send(new GetChargersQuery());
+            return Results.Ok(mapper.Map<ChargerResponse>(result));
+        }).RequireAuthorization();
 
-        app.MapPut("/", async (
-            [FromBody] UpdateUserRequest request,
+        app.MapPost("/", async (
+            [FromBody] CreateChargerRequest request,
             ISender sender,
             IMapper mapper) =>
         {
-            var command = mapper.Map<UpdateUserCommand>(request);
+            var command = mapper.Map<CreateChargerCommand>(request);
             return Results.Ok(await sender.Send(command));
         });
 
         app.MapDelete("/{id}", async (
-            [FromRoute] Guid id,
+            [FromRoute] int id,
             ISender sender,
             IMapper mapper) =>
         {
-            var result = await sender.Send(new DeleteUserCommand(id));
+            var result = await sender.Send(new DeleteChargerCommand(id));
             return Results.Ok(result);
         });
     }

@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Dtos;
+using Application.Helpers;
 using Application.Providers;
 
 using Domain;
@@ -47,13 +48,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
         existing.ResetFailedLogins();
         await _unitOfWork.SaveChangesWithoutChangeTrackingAsync(cancellationToken);
 
-        var token = _jwtTokenProvider.GenerateToken(existing);
-
-        return new LoginResult(
-            existing.Id,
-            existing.Email,
-            token
-        );
+        return await _jwtTokenProvider.GenerateToken(existing);
     }
 }
 

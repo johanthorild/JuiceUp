@@ -19,4 +19,12 @@ public partial class Charger : IEntity
     public virtual ICollection<Reservation> Reservations { get; } = new List<Reservation>();
 
     public virtual Station Station { get; set; } = null!;
+
+    public Charger(
+        int stationId,
+        int chargerSpeedId)
+    {
+        StationId = stationId;
+        ChargerSpeedId = chargerSpeedId;
+    }
 }

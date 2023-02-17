@@ -1,4 +1,4 @@
-namespace Application;
+namespace Application.Dtos;
 
 /// <summary>
 /// Contains response of a successfull login
@@ -6,5 +6,6 @@ namespace Application;
 public record LoginResult(
     Guid Id,
     string Email,
-    string Accesstoken
+    string Accesstoken,
+    RefreshTokenResult Refreshtoken
 );

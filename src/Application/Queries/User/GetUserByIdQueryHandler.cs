@@ -1,6 +1,4 @@
-﻿using Application.Commands;
-
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repositories;
 
 using MediatR;
@@ -22,7 +20,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
     {
         var existing = await _userRepository.GetById(command.Id);
         return existing is null ?
-            throw new NotImplementedException(nameof(RegisterCommand))
+            throw new NotImplementedException(nameof(GetUserByIdQuery))
             :
             existing;
     }

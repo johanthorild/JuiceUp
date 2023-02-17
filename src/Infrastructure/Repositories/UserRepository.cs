@@ -43,22 +43,33 @@ public sealed class UserRepository : IUserRepository
         return await _dbContext.Users.AnyAsync(x => x.Email == email);
     }
 
-    public void Insert(User user)
+    public User? Insert(User user)
     {
-        _dbContext?.Set<User>().Add(user);
+        var entry = _dbContext?.Set<User>().Add(user).Entity;
+        return entry is not null ? entry : null;
     }
 
-    public void Update(User user)
+    public User? Update(User user)
     {
-        _dbContext?.Set<User>().Update(user);
+        var entry = _dbContext?.Set<User>().Update(user).Entity;
+        return entry is not null ? entry : null;
     }
 
-    public async void Delete(Guid id)
+    public void Delete(Guid id)
     {
-        _dbContext?.Set<User>().Remove(
-            await _dbContext.Users
-            .SingleAsync(x => x.Id == id)
-            );
+        var user = _dbContext?.Set<User>()
+            .Include(u => u.UserRoles)
+            .Include(u => u.UserCars)
+            .Include(u => u.Reservations)
+            .FirstOrDefault(x => x.Id == id);
+
+        if (user is not null)
+        {
+            _dbContext?.Set<UserRole>().RemoveRange(user.UserRoles);
+            _dbContext?.Set<UserCar>().RemoveRange(user.UserCars);
+            _dbContext?.Set<Reservation>().RemoveRange(user.Reservations);
+            _dbContext?.Set<User>().Remove(user);
+        }
     }
 
     // TODO: Apply Specification pattern

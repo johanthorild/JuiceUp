@@ -158,7 +158,7 @@ public partial class AppDbContext : DbContext
 
         SeedDefaultData(modelBuilder);
 
-        RestrictCascadingDeletesOnAllForeignKeys(modelBuilder);
+        //RestrictCascadingDeletesOnAllForeignKeys(modelBuilder);
 
         OnModelCreatingPartial(modelBuilder);
     }
@@ -175,11 +175,11 @@ public partial class AppDbContext : DbContext
             new ChargerSpeed { Id = 3, Kilowatt = 50 });
 
         modelBuilder.Entity<Station>().HasData(
-            new Station { Id = 1, Name = "Stockholm", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new Station { Id = 2, Name = "Linköping", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new Station { Id = 3, Name = "Jönköping", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new Station { Id = 4, Name = "Ljungby", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new Station { Id = 5, Name = "Halmstad", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
+            new Station(1, "Stockholm", _dateTimeProvider.Fixed, "DataSeed"),
+            new Station(2, "Linköping", _dateTimeProvider.Fixed, "DataSeed"),
+            new Station(3, "Jönköping", _dateTimeProvider.Fixed, "DataSeed"),
+            new Station(4, "Ljungby", _dateTimeProvider.Fixed, "DataSeed"),
+            new Station(5, "Halmstad", _dateTimeProvider.Fixed, "DataSeed"));
 
         modelBuilder.Entity<CarModel>().HasData(
             new CarModel { Id = 1, Name = "Tesla Model 3", Capacity = 57.5, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
@@ -188,16 +188,16 @@ public partial class AppDbContext : DbContext
             new CarModel { Id = 4, Name = "Opel Corsa-e", Capacity = 45, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
     }
 
-    private static void RestrictCascadingDeletesOnAllForeignKeys(ModelBuilder modelBuilder)
-    {
-        foreach (var relationship in modelBuilder.Model
-            .GetEntityTypes()
-            .SelectMany(
-            x => x.GetForeignKeys()))
-        {
-            relationship.DeleteBehavior = DeleteBehavior.Restrict;
-        }
-    }
+    //private static void RestrictCascadingDeletesOnAllForeignKeys(ModelBuilder modelBuilder)
+    //{
+    //    foreach (var relationship in modelBuilder.Model
+    //        .GetEntityTypes()
+    //        .SelectMany(
+    //        x => x.GetForeignKeys()))
+    //    {
+    //        relationship.DeleteBehavior = DeleteBehavior.Restrict;
+    //    }
+    //}
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

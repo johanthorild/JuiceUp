@@ -39,8 +39,12 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("MainDb")));
 
+        services.AddMemoryCache();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IStationRepository, StationRepository>();
+        services.AddScoped<IChargerRepository, ChargerRepository>();
 
         return services;
     }
@@ -53,6 +57,7 @@ public static class DependencyInjection
         var addressOptions = ConfigureOptions<AddressOptions>(services, configuration, AddressOptions.OptionsKey);
 
         services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
+        services.AddSingleton<IRefreshTokenStorageProvider, MemoryCacheRefreshTokenStorageProvider>();
         services.AddTransient<IHttpContextUserProvider, HttpContextUserProvider>();
 
         services.AddHttpContextAccessor();

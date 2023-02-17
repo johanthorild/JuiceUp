@@ -16,41 +16,49 @@ using Presentation.Requests;
 using Presentation.Responses;
 
 namespace Presentation.Modules;
-public class UserModule : CarterModule
+public class StationModule : CarterModule
 {
-    public UserModule()
-        : base("/api/user")
+    public StationModule()
+        : base("/api/station")
     {
-        WithGroupName("User");
+        WithGroupName("Station");
         RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/{id}", async (
-            [FromRoute] Guid id,
+        app.MapGet("/", async (
             ISender sender,
             IMapper mapper) =>
         {
-            var result = await sender.Send(new GetUserByIdQuery(id));
-            return Results.Ok(mapper.Map<UserResponse>(result));
+            var result = await sender.Send(new GetStationsQuery());
+            return Results.Ok(mapper.Map<StationResponse>(result));
+        });
+
+        app.MapPost("/", async (
+            [FromBody] CreateStationRequest request,
+            ISender sender,
+            IMapper mapper) =>
+        {
+            var command = mapper.Map<CreateStationCommand>(request);
+            return Results.Ok(await sender.Send(command));
         });
 
         app.MapPut("/", async (
-            [FromBody] UpdateUserRequest request,
+            [FromBody] UpdateStationRequest request,
             ISender sender,
             IMapper mapper) =>
         {
-            var command = mapper.Map<UpdateUserCommand>(request);
+            var command = mapper.Map<UpdateStationCommand>(request);
             return Results.Ok(await sender.Send(command));
         });
 
         app.MapDelete("/{id}", async (
-            [FromRoute] Guid id,
+            [FromRoute] int id,
             ISender sender,
             IMapper mapper) =>
         {
-            var result = await sender.Send(new DeleteUserCommand(id));
+            var result = await sender.Send(new DeleteStationCommand(id));
             return Results.Ok(result);
         });
     }

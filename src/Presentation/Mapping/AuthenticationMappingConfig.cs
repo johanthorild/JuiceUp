@@ -1,5 +1,5 @@
-﻿using Application;
-using Application.Commands;
+﻿using Application.Commands;
+using Application.Dtos;
 
 using Mapster;
 
@@ -15,6 +15,6 @@ public class AuthenticationMappingConfig : IRegister
         config.NewConfig<LoginRequest, LoginCommand>();
 
         config.NewConfig<LoginResult, LoginResponse>();
-        config.NewConfig<RefreshResult, RefreshResponse>();
+        config.NewConfig<RefreshTokenResult, RefreshTokenResponse>();
     }
 }

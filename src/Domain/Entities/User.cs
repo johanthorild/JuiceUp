@@ -36,12 +36,18 @@ public partial class User : IEntity, IChangeTracked
 
     public virtual ICollection<UserRole> UserRoles { get; } = new List<UserRole>();
 
+    public User(Guid id)
+    {
+        Id = id;
+    }
+
     public User(
         string email,
         string firstname,
         string lastname,
         string password,
-        string salt)
+        string salt,
+        IReadOnlyList<UserRole> roles)
     {
         Id = Guid.NewGuid();
         Email = email;
@@ -49,28 +55,28 @@ public partial class User : IEntity, IChangeTracked
         Lastname = lastname;
         Password = password;
         Salt = salt;
-        UserRoles = ApplyDefaultRole();
+        UserRoles = (ICollection<UserRole>)roles;
     }
 
-    public void UpdateFirstname(string firstname)
+    public void SetFirstname(string firstname)
     {
         if (!string.IsNullOrWhiteSpace(firstname) && firstname != Firstname)
             Firstname = firstname;
     }
 
-    public void UpdateLastname(string lastname)
+    public void SetLastname(string lastname)
     {
         if (!string.IsNullOrWhiteSpace(lastname) && lastname != Lastname)
             Lastname = lastname;
     }
 
-    public void UpdateEmail(string email)
+    public void SetEmail(string email)
     {
         if (!string.IsNullOrWhiteSpace(email) && email != Email)
             Email = email;
     }
 
-    public void UpdatePassword(
+    public void SetPassword(
         string password,
         string salt)
     {
@@ -82,12 +88,4 @@ public partial class User : IEntity, IChangeTracked
     }
 
     public void ResetFailedLogins() => FailedLogins = 0;
-
-    static ICollection<UserRole> ApplyDefaultRole()
-    {
-        return new List<UserRole>()
-        {
-           new() { RoleId = 1 }
-        };
-    }
 }

@@ -32,6 +32,16 @@ public class AuthenticationModule : CarterModule
             return Results.Ok(result);
         });
 
+        app.MapPost("/refresh", async (
+            [FromBody] RefreshRequest request,
+            ISender sender) =>
+        {
+            var result = await sender.Send(new RefreshCommand(
+                request.AccessToken,
+                request.RefreshToken));
+            return Results.Ok(result);
+        });
+
         app.MapPost("/register", async (
             [FromBody] RegisterRequest request,
             ISender sender) =>
