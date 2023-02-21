@@ -20,7 +20,7 @@ public sealed class ChargerRepository : IChargerRepository
             .Include(u => u.Reservations)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return chargers is not null ? chargers : null;
+        return chargers ?? null;
     }
 
     public async Task<IEnumerable<Charger>> GetAll()
@@ -30,14 +30,14 @@ public sealed class ChargerRepository : IChargerRepository
             .Include(u => u.Reservations)
             .ToArrayAsync();
 
-        return chargers is not null ? chargers : Array.Empty<Charger>();
+        return chargers ?? Array.Empty<Charger>();
     }
 
     public async Task<IEnumerable<ChargerSpeed>> GetAllSpeeds()
     {
         var speeds = await _dbContext.ChargerSpeeds.ToArrayAsync();
 
-        return speeds is not null ? speeds : Array.Empty<ChargerSpeed>();
+        return speeds ?? Array.Empty<ChargerSpeed>();
     }
 
     public void Insert(Charger charger)

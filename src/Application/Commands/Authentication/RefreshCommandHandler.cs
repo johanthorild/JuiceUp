@@ -27,12 +27,12 @@ public class RefreshCommandHandler : IRequestHandler<RefreshCommand, RefreshToke
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<LoginResult> Handle(
-        RefreshTokenResult command,
+    public async Task<RefreshTokenResult> Handle(
+        RefreshCommand command,
         CancellationToken cancellationToken)
     {
-        var tokenValidationParameters = _authOptions.TokenValidationParameters ?? throw new InvalidOperationException($"Cannot get {nameof(AuthOptions.TokenValidationParameters)} from DI-provided configuration. This indicates a bug in the backend.");
-
+        //var tokenValidationParameters = _authOptions.TokenValidationParameters ?? throw new InvalidOperationException($"Cannot get {nameof(AuthOptions.TokenValidationParameters)} from DI-provided configuration. This indicates a bug in the backend.");
+        return await Task.FromResult(new RefreshTokenResult(DateTime.Now, string.Empty));
     }
 }
 
