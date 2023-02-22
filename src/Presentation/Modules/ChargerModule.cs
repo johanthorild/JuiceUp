@@ -33,7 +33,8 @@ public class ChargerModule : CarterModule
         {
             var result = await sender.Send(new GetChargersQuery());
             return Results.Ok(mapper.Map<ChargerResponse>(result));
-        }).RequireAuthorization();
+        })
+        .AllowAnonymous();
 
         app.MapPost("/", async (
             [FromBody] CreateChargerRequest request,

@@ -33,7 +33,8 @@ public class StationModule : CarterModule
         {
             var result = await sender.Send(new GetStationsQuery());
             return Results.Ok(mapper.Map<StationResponse>(result));
-        });
+        })
+        .AllowAnonymous();
 
         app.MapPost("/", async (
             [FromBody] CreateStationRequest request,
