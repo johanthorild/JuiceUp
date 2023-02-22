@@ -23,7 +23,7 @@ public sealed class UserRepository : IUserRepository
                 .ThenInclude(u => u.Car)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return user is not null ? user : null;
+        return user ?? null;
     }
 
     public async Task<User?> GetByEmail(string email)
@@ -35,7 +35,7 @@ public sealed class UserRepository : IUserRepository
                 .ThenInclude(u => u.Car)
             .FirstOrDefaultAsync(x => x.Email == email);
 
-        return user is not null ? user : null;
+        return user ?? null;
     }
 
     public async Task<bool> IsUserWithEmailExisting(string email)
@@ -46,13 +46,13 @@ public sealed class UserRepository : IUserRepository
     public User? Insert(User user)
     {
         var entry = _dbContext?.Set<User>().Add(user).Entity;
-        return entry is not null ? entry : null;
+        return entry ?? null;
     }
 
     public User? Update(User user)
     {
         var entry = _dbContext?.Set<User>().Update(user).Entity;
-        return entry is not null ? entry : null;
+        return entry ?? null;
     }
 
     public void Delete(Guid id)

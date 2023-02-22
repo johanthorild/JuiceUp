@@ -20,7 +20,7 @@ public sealed class StationRepository : IStationRepository
                 .ThenInclude(u => u.ChargerSpeed)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return station is not null ? station : null;
+        return station ?? null;
     }
 
     public async Task<IEnumerable<Station>> GetAll()
@@ -30,7 +30,7 @@ public sealed class StationRepository : IStationRepository
                 .ThenInclude(u => u.ChargerSpeed)
             .ToArrayAsync();
 
-        return stations is not null ? stations : Array.Empty<Station>();
+        return stations ?? Array.Empty<Station>();
     }
 
     public void Insert(Station station)
