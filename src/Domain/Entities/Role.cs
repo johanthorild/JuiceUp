@@ -18,3 +18,10 @@ public partial class Role : IEntity, IChangeTracked
 
     public virtual ICollection<UserRole> UserRoles { get; } = new List<UserRole>();
 }
+
+// As in the database
+public enum Roles
+{
+    Reader = 1,
+    Admin = 2
+}

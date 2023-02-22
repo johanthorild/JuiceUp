@@ -46,8 +46,7 @@ public partial class User : IEntity, IChangeTracked
         string firstname,
         string lastname,
         string password,
-        string salt,
-        IReadOnlyList<UserRole> roles)
+        string salt)
     {
         Id = Guid.NewGuid();
         Email = email;
@@ -55,7 +54,7 @@ public partial class User : IEntity, IChangeTracked
         Lastname = lastname;
         Password = password;
         Salt = salt;
-        UserRoles = (ICollection<UserRole>)roles;
+        UserRoles = SetUserRole(Roles.Reader);
     }
 
     public void SetFirstname(string firstname)
@@ -85,6 +84,16 @@ public partial class User : IEntity, IChangeTracked
             Password = password;
             Salt = salt;
         }
+    }
+
+    public static ICollection<UserRole> SetUserRole(Roles role)
+    {
+        return new List<UserRole>() {
+            new UserRole
+            {
+                RoleId = (int)role
+            }
+        };
     }
 
     public void ResetFailedLogins() => FailedLogins = 0;

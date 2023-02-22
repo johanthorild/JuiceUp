@@ -35,10 +35,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginResu
 
         var (salt, hashedPassword) = PasswordHelper.GenerateHashedPasswordWithSalt(command.PasswordBase64);
 
-        //TODO: Get Roles from memory cache and apply default for a new user
-
-        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt, new List<UserRole>() { new UserRole() { } });
-
+        var user = new User(command.Email, command.Firstname, command.Lastname, hashedPassword, salt);
         _userRepository.Insert(user);
 
         await _unitOfWork.SaveChangesWithoutChangeTrackingAsync(cancellationToken);

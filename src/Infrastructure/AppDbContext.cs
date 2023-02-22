@@ -166,8 +166,14 @@ public partial class AppDbContext : DbContext
     private void SeedDefaultData(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Name = "Reader", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new Role { Id = 2, Name = "Admin", LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
+            Enum.GetValues<Roles>()
+            .Select(x => new Role
+            {
+                Id = (int)x,
+                Name = x.ToString(),
+                LastChanged = _dateTimeProvider.Fixed,
+                LastChangedBy = "DataSeed"
+            }));
 
         modelBuilder.Entity<ChargerSpeed>().HasData(
             new ChargerSpeed { Id = 1, Kilowatt = 11 },

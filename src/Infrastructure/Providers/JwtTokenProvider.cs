@@ -51,7 +51,7 @@ public class JwtTokenProvider : IJwtTokenProvider
 
         // Add roles if any
         if (user.UserRoles.Any())
-            claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, x.Role.Name)));
+            claims.AddRange(user.UserRoles.Select(x => new Claim(ClaimTypes.Role, ((Roles)x.RoleId).ToString())));
 
         // Add audience if not already existing in the provided claims
         var shouldAddAudienceClaim =
