@@ -112,4 +112,20 @@ public partial class Station : IEntity, IChangeTracked
             CloseTime = closeTime;
         }
     }
+
+    public void SetLongitude(string? longitude)
+    {
+        if (longitude is not null)
+        {
+            Longitude = longitude;
+        }
+    }
+
+    public void SetLatitude(string? latitude)
+    {
+        if (latitude is not null)
+        {
+            Latitude = latitude;
+        }
+    }
 }

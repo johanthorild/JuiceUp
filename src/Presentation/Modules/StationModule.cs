@@ -32,7 +32,7 @@ public class StationModule : CarterModule
             IMapper mapper) =>
         {
             var result = await sender.Send(new GetStationsQuery());
-            return Results.Ok(mapper.Map<StationResponse>(result));
+            return Results.Ok(mapper.Map<IReadOnlyList<StationResponse>>(result));
         })
         .AllowAnonymous();
 

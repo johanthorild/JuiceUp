@@ -32,7 +32,7 @@ public class ChargerModule : CarterModule
             IMapper mapper) =>
         {
             var result = await sender.Send(new GetChargersQuery());
-            return Results.Ok(mapper.Map<ChargerResponse>(result));
+            return Results.Ok(mapper.Map<IReadOnlyList<ChargerResponse>>(result));
         })
         .AllowAnonymous();
 
