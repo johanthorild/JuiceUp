@@ -16,7 +16,8 @@ public class ChargerMappingConfig : IRegister
         config.NewConfig<CreateChargerRequest, CreateChargerCommand>();
 
         config.NewConfig<Charger, ChargerResponse>()
-            .Map(dest => dest.Station, src => src.Station)
+            .Map(dest => dest.StationId, src => src.Station.Id)
+            .Map(dest => dest.ChargerSpeedId, src => src.ChargerSpeedId)
             .Map(dest => dest.ChargerSpeedKilowatt, src => src.ChargerSpeed.Kilowatt);
     }
 }

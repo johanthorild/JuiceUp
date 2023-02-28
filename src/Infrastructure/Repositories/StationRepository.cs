@@ -26,8 +26,8 @@ public sealed class StationRepository : IStationRepository
     public async Task<IEnumerable<Station>> GetAll()
     {
         var stations = await _dbContext.Stations
-            .Include(u => u.Chargers)
-                .ThenInclude(u => u.ChargerSpeed)
+            //.Include(u => u.Chargers)
+            //.ThenInclude(u => u.ChargerSpeed)
             .ToArrayAsync();
 
         return stations ?? Array.Empty<Station>();
