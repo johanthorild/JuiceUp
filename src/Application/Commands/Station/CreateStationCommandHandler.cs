@@ -31,7 +31,11 @@ public class CreateStationCommandHandler : IRequestHandler<CreateStationCommand,
             command.Latitude,
             command.Longitude,
             command.OpenTime,
-            command.CloseTime);
+            command.CloseTime,
+            command.HasRestaurant,
+            command.HasConference,
+            command.HasPersonel,
+            command.HasRestroom);
 
         _stationRepository.Insert(station);
 

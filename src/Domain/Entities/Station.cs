@@ -26,6 +26,11 @@ public partial class Station : IEntity, IChangeTracked
 
     public string? LastChangedBy { get; set; }
 
+    public bool? HasRestaurant { get; set; }
+    public bool? HasConference { get; set; }
+    public bool? HasPersonel { get; set; }
+    public bool? HasRestroom { get; set; }
+
     /// <summary>
     /// Navigational properties />
     /// </summary>
@@ -53,7 +58,11 @@ public partial class Station : IEntity, IChangeTracked
         string? latitude,
         string? longitude,
         TimeSpan? openTime,
-        TimeSpan? closeTime)
+        TimeSpan? closeTime,
+        bool? hasRestaurant,
+        bool? hasConference,
+        bool? hasPersonel,
+        bool? hasRestroom)
     {
         Name = name;
         Address = address;
@@ -63,6 +72,10 @@ public partial class Station : IEntity, IChangeTracked
         Longitude = longitude;
         OpenTime = openTime;
         CloseTime = closeTime;
+        HasRestaurant = hasRestaurant;
+        HasConference = hasConference;
+        HasPersonel = hasPersonel;
+        HasRestroom = hasRestroom;
     }
 
     public void SetName(string? name)
@@ -126,6 +139,38 @@ public partial class Station : IEntity, IChangeTracked
         if (latitude is not null)
         {
             Latitude = latitude;
+        }
+    }
+
+    public void SetHasRestaurant(bool? hasRestaurant)
+    {
+        if (hasRestaurant is not null)
+        {
+            HasRestaurant = hasRestaurant;
+        }
+    }
+
+    public void SetHasConference(bool? hasConference)
+    {
+        if (hasConference is not null)
+        {
+            HasConference = hasConference;
+        }
+    }
+
+    public void SetHasPersonel(bool? hasPersonel)
+    {
+        if (hasPersonel is not null)
+        {
+            HasPersonel = hasPersonel;
+        }
+    }
+
+    public void SetHasRestroom(bool? hasRestroom)
+    {
+        if (hasRestroom is not null)
+        {
+            HasRestroom = hasRestroom;
         }
     }
 }

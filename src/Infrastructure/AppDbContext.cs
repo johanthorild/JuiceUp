@@ -188,10 +188,10 @@ public partial class AppDbContext : DbContext
             new Station(5, "Halmstad", _dateTimeProvider.Fixed, "DataSeed"));
 
         modelBuilder.Entity<CarModel>().HasData(
-            new CarModel { Id = 1, Name = "Tesla Model 3", Capacity = 57.5, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new CarModel { Id = 2, Name = "Kia EV6", Capacity = 54, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new CarModel { Id = 3, Name = "MG 4", Capacity = 51, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" },
-            new CarModel { Id = 4, Name = "Opel Corsa-e", Capacity = 45, LastChanged = _dateTimeProvider.Fixed, LastChangedBy = "DataSeed" });
+            new CarModel(1, "Tesla Model 3", 57.5, 380, _dateTimeProvider.Fixed, "DataSeed"),
+            new CarModel(2, "Kia EV6", 54, 305, _dateTimeProvider.Fixed, "DataSeed"),
+            new CarModel(3, "MG 4", 51, 300, _dateTimeProvider.Fixed, "DataSeed"),
+            new CarModel(4, "Opel Corsa-e", 45, 285, _dateTimeProvider.Fixed, "DataSeed"));
     }
 
     //private static void RestrictCascadingDeletesOnAllForeignKeys(ModelBuilder modelBuilder)

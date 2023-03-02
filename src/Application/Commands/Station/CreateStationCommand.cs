@@ -10,4 +10,8 @@ public sealed record CreateStationCommand(
     string? Latitude,
     string? Longitude,
     TimeSpan? OpenTime,
-    TimeSpan? CloseTime) : IRequest<int>;
+    TimeSpan? CloseTime,
+    bool? HasRestaurant,
+    bool? HasConference,
+    bool? HasPersonel,
+    bool? HasRestroom) : IRequest<int>;
