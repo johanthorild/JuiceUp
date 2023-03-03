@@ -22,7 +22,6 @@ public class StationModule : CarterModule
         : base("/api/station")
     {
         WithGroupName("Station");
-        RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)

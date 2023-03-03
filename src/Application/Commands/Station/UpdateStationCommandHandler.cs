@@ -45,6 +45,10 @@ public class UpdateStationCommandHandler : IRequestHandler<UpdateStationCommand,
         existing.SetCloseTime(command.CloseTime);
         existing.SetLongitude(command.Longitude);
         existing.SetLatitude(command.Latitude);
+        existing.SetHasRestaurant(command.HasRestaurant);
+        existing.SetHasConference(command.HasConference);
+        existing.SetHasPersonel(command.HasPersonel);
+        existing.SetHasRestroom(command.HasRestroom);
 
         _stationRepository.Update(existing);
 
